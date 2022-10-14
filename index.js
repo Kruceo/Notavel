@@ -57,6 +57,7 @@ function initNotavel() {
     let varis = [];
     textEditorEl.addEventListener("input", (e) => {
       genRowsCounter(textEditorEl, rowsCountEl);
+      tst.dispatchEvent(new Event('input'))
     });
     textEditorEl.addEventListener("focusout", (e) => {
       genHighlight(textEditorEl, lang);
