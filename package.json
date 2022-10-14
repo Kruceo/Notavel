@@ -1,6 +1,6 @@
 {
   "name":"notavel",
-  "version":"0.0.6",
+  "version":"0.0.7",
   "description":"",
   "main":"index.js",
   "scripts":{
@@ -9,6 +9,7 @@
   "author":"Kruceo",
   "license":"ISC",
   "dependencies":{
+    "acorn":"^8.8.0",
     "highlight.js":"^11.6.0"
   }
 }

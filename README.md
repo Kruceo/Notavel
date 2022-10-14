@@ -5,12 +5,28 @@ It is recommended to use the script at the bottom of your body tag, or you can u
 ```html
 <body>
     ...
-    <script src="https://notavel.kruceo.com/index.min.js"></script>
+    <script defer type="module">
+      import {initNotavel} from 'notavel';
+      initNotavel();
+    </script>
 <body>
 ```
 
 ## Basic use:
 In your body tag:
 ```html
-<code-editor></code-editor>
+<code-editor>
+    your.init(code);
+</code-editor>
+```
+
+## Setting language:
+In your body tag:
+```html
+<code-editor lang='css'>
+    code-editor
+    {
+        background: blue;
+    }
+</code-editor>
 ```

@@ -9,17 +9,38 @@
     <script src="https://banana.kruceo.com/slide.js"></script>
   </head>
   <body>
-    <code-editor class="lang-html" style="width: 1000px; height: 500px; background-color: rgb(51, 51, 51); color: aliceblue;"> 
-    &lt;script src="https://banana.kruceo.com/dist/bundle.cdn.js">&lt;/script>
-    </code-editor>
-    <script type="module" src="index.js"></script>
+    <script type="module" src="./ui.js"></script>
+    <script type="module">
+      import { initNotavel } from "./index.js";
+      initNotavel();
+    </script>
+    <code-editor
+      lang="javascript"
+      style="
+        font-size: 12px;
+        background-color: rgb(51, 51, 51);
+        color: aliceblue;
+      "
+    >var array = [1,2,3,4,5]
+function foo(value)
+{
+  console.log(value) 
+}
+var foo = 'loooog';
+
+const coef = 1000;
+foo(array.toString())</code-editor>
   </body>
   <style>
-    code-editor
-    {
-      border-radius: 10px;
+    code-editor {
+      border-radius: 15px;
       font-family: cursive;
-      --counter-color: #545454
+      --counter-text-color: #545454;
+      --counter-background: #55555560;
+      padding: 10px;
+    }
+    code-editor header {
+      border-radius: 10px;
     }
   </style>
 </html>
