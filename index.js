@@ -25,8 +25,7 @@ function initNotavel() {
     rowsCountEl.style.color = getComputedStyle(tst).getPropertyValue(
       "--counter-text-color"
     );
-    rowsCountEl.style.background =
-      getComputedStyle(tst).getPropertyValue("--counter-background") ??
+    rowsCountEl.style.background = getComputedStyle(tst).getPropertyValue("--counter-background") ??
       "#505050";
     rowsCountEl.style.minHeight = "100%";
     rowsCountEl.style.height = "fit-content";
@@ -56,7 +55,9 @@ function initNotavel() {
     let log = document.createElement("p");
     document.body.appendChild(log);
     let varis = [];
-      
+    textEditorEl.addEventListener("input", (e) => {
+      genRowsCounter(textEditorEl, rowsCountEl);
+    });
     textEditorEl.addEventListener("focusout", (e) => {
       genHighlight(textEditorEl, lang);
       genRowsCounter(textEditorEl, rowsCountEl);
