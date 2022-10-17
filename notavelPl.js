@@ -1,46 +1,62 @@
 import { parse } from "acorn";
+import { genContextPanel, setVisible } from "./contextPanel";
+import { getLastFromVarious, replaceVarious } from "./lib/stringProcess";
 
-import { variArray } from "./contextPanel";
-
-let exp = "let i = 0; console.log(i);";
-
-//getBeforeWhile(exp,1,exp.length-1)
 let varis = [];
+let params = [];
+const defaultVaris = Object.keys(self);
 
-function getLastFromVarious(_text, ..._regexArray) {
-  let finalArray = [];
-
-  _regexArray.forEach((element) => {
-    finalArray.push(_text.lastIndexOf(element));
-  });
-  if (finalArray.sort((a, b) => b - a)[0] == -1) {
-    return 0;
-  }
-  return finalArray.sort((a, b) => b - a)[0];
-}
 document.querySelector("textarea").addEventListener("input", (e) => {
+  let selEnd = e.target.selectionEnd + 1;
+  let lastWord = e.target.value.slice(0, selEnd);
+  setVisible(false)
+  lastWord = lastWord.slice(
+    getLastFromVarious(lastWord, ";", " ", "\n"),
+    selEnd - 1
+  );
+  let param = lastWord
+    .slice(
+      getLastFromVarious(lastWord, "(", "=", "-", "+", "/", "*", "."),selEnd).trim();
+  param = replaceVarious(param, "", "(", ".");
+  const varisBackup = varis;
   varis = [];
-
   let parseAll = [];
   try {
     parseAll = parse(e.target.value, { ecmaVersion: 2021 }).body;
-  } catch (error) {}
-
-  //console.log(parseAll)
-  parseAll.forEach((each) => {
-    if (each.type == "VariableDeclaration") {
-      varis.push(each);
+    parseAll.forEach((each) => {
+        console.log(each);
+        if (each.type == "VariableDeclaration") {
+          varis.push(each.declarations[0].id.name);
+        }
+      });
+  } catch (error) {
+    console.log(error);
+    varis = varisBackup;
+  }
+  const paramsBackup = params;
+  params = [];
+  try {
+    params = Object.keys(new Function("return " + lastWord.trim())());
+  } catch (error) {
+    params = paramsBackup;
+  }
+  
+  let all = [];
+  all.push(...params)
+  all.push(...varis);
+  if (param == lastWord) {
+    all.push(...defaultVaris);
+  }
+  let filter = all.filter((each) => {
+    if (each.startsWith(param)) {
+      return each;
     }
+    console.log(each)
   });
-
-  let selEnd = e.target.selectionEnd;
-  let lastWord = e.target.value.slice(0, selEnd);
-  lastWord = lastWord.slice(getLastFromVarious(lastWord, ";", " ", "\n"),selEnd);
-  let param = lastWord.slice(getLastFromVarious(lastWord, "(", "=", "-", "+", "/", "*"),selEnd).trim();
-  let filter = varis.filter((each) => {
-      if (each.declarations[0].id.name.startsWith(param)) {
-        return each;
-      }
-    });
-  variArray(filter);
+  
+  if(filter.length > 0)
+  {
+    genContextPanel(filter);
+    setVisible(true)
+  }
 });
