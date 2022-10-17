@@ -1,11 +1,9 @@
 import hljs from "highlight.js";
-import { parse, tokTypes } from "acorn";
 function initNotavel() {
   document.querySelectorAll("code-editor").forEach((ce) => {
     const initialValue = ce.innerHTML;
     ce.innerHTML = "";
     let tst = ce;
-    let lineCounterPad = 2;
     let lang = ce.getAttribute("lang") ?? "javascript";
     let counter = ce.getAttribute("allowCounter") ?? true;
     console.log(tst.style);

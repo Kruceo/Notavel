@@ -13,7 +13,9 @@ It is recommended to use the script at the bottom of your body tag, or you can u
 ```
 
 ## Basic use:
+
 In your body tag:
+
 ```html
 <code-editor>
     your.init(code);
@@ -22,6 +24,7 @@ In your body tag:
 
 ## Setting language:
 In your body tag:
+
 ```html
 <code-editor lang='css'>
     code-editor
