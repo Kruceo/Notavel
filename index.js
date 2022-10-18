@@ -8,7 +8,6 @@ function initNotavel() {
     let counter = ce.getAttribute("allowCounter") ?? true;
     console.log(tst.style);
     let textEditorEl = document.createElement("code");
-
     let header = document.createElement("header");
     textEditorEl.setAttribute("contenteditable", "true");
     let rowsCountEl = document.createElement("code");
@@ -23,7 +22,8 @@ function initNotavel() {
     rowsCountEl.style.color = getComputedStyle(tst).getPropertyValue(
       "--counter-text-color"
     );
-    rowsCountEl.style.background = getComputedStyle(tst).getPropertyValue("--counter-background") ??
+    rowsCountEl.style.background =
+      getComputedStyle(tst).getPropertyValue("--counter-background") ??
       "#505050";
     rowsCountEl.style.minHeight = "100%";
     rowsCountEl.style.height = "fit-content";
@@ -49,17 +49,28 @@ function initNotavel() {
     //start
     genRowsCounter(textEditorEl, rowsCountEl);
     genHighlight(textEditorEl, lang);
-
-    let log = document.createElement("p");
-    document.body.appendChild(log);
-    let varis = [];
-    textEditorEl.addEventListener("input", (e) => {
-      genRowsCounter(textEditorEl, rowsCountEl);
+    textEditorEl.innerHTML += '\n'
+    textEditorEl.addEventListener("keydown", (e) => {
+     
       tst.value = textEditorEl.innerText;
-      tst.dispatchEvent(new Event('input'))
+      genRowsCounter(textEditorEl, rowsCountEl);
+      tst.selectionEnd = window.getSelection().anchorOffset;
+
+
+      tst.dispatchEvent(new Event("input", { bubbles: true }));
+      //textEditorEl.innerHTML = textEditorEl.innerText
+      
+      if (e.key == "Enter") {
+        e.preventDefault();
+        const postPos = window.getSelection().focusOffset +1;
+        e.target.innerHTML = textEditorEl.innerText.slice(0,tst.selectionEnd) + '\n ' +textEditorEl.innerText.slice(tst.selectionEnd,textEditorEl.innerText.lenght);
+          window.getSelection().setPosition(textEditorEl.childNodes[0],postPos)
+        
+        
+      }
     });
     textEditorEl.addEventListener("focusout", (e) => {
-      genHighlight(textEditorEl, lang);
+      //genHighlight(textEditorEl, lang);
       genRowsCounter(textEditorEl, rowsCountEl);
     });
     let style = document.createElement("style");
@@ -71,6 +82,7 @@ function initNotavel() {
     tst.appendChild(header);
     header.appendChild(rowsCountEl);
     header.appendChild(textEditorEl);
+   
   });
 }
 
