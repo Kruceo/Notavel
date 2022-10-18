@@ -12,7 +12,7 @@ border-radius: 0px;
 const panelStyle = `
 background: #dfdfdf;
 margin: 0 auto;
-border-radius: 10px;
+border-radius: 2px;
 width: 200px;
 max-height: 400px;
 overflow: auto;
@@ -39,6 +39,14 @@ export function genContextPanel(itens) {
     x = e.pageX + "px";
     y = e.pageY + "px";
   });
+  window.addEventListener('keydown',(e)=>
+  {
+    
+    if(e.key == "Escape")
+    {
+        setVisible(false)
+    }
+  })
 }
 
 export function setVisible(bool) {
@@ -49,6 +57,6 @@ export function setVisible(bool) {
   }
   if (!bool) {
    
-    panel.style.visibility = "invisible";
+    panel.style.visibility = "hidden";
   }
 }

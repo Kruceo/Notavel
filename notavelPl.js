@@ -13,14 +13,14 @@ document.querySelector("code-editor").addEventListener("input", (e) => {
   
   setVisible(false)
   lastWord = lastWord.slice(
-    getLastFromVarious(lastWord, ";", " ", "\n"),
+    getLastFromVarious(lastWord, ";", "\n"),
     selEnd - 1
   );
   let param = lastWord
     .slice(
-      getLastFromVarious(lastWord, "(", "=", "-", "+", "/", "*", ".",";","\n"),selEnd).trim();
-  param = replaceVarious(param, "", "(", ".");
-  console.log(selEnd);
+      getLastFromVarious(lastWord, "{","}","(",")","!", "=", "-", "+", "/", "*","<", ">",".",";","\n",":"),selEnd).trim();
+  param = replaceVarious(param, "", "(",")","{","}", ".");
+  console.log(lastWord, param);
   const varisBackup = varis;
   varis = [];
   let parseAll = [];
@@ -39,11 +39,13 @@ document.querySelector("code-editor").addEventListener("input", (e) => {
   const paramsBackup = params;
   params = [];
   try {
-    params = Object.keys(new Function("return " + lastWord.trim())());
-  } catch (error) {
+    if(!lastWord.includes('=')){
+    params = Object.keys(new Function("if(typeof(" + lastWord.trim()+") == 'object')return "+lastWord.trim())());
+  }} catch (error) {
+    if(lastWord == ''|null)params = []
     params = paramsBackup;
   }
-  
+console.log(typeof(JSON));lastWord.trim()
   let all = [];
   all.push(...params)
   all.push(...varis);
@@ -52,7 +54,10 @@ document.querySelector("code-editor").addEventListener("input", (e) => {
   }
   let filter = all.filter((each) => {
     if (each.startsWith(param)) {
-      return each;
+        if(each != lastWord.replaceAll('.',''))
+        {
+            return each
+        }
     }
   });
   

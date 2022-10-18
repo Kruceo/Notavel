@@ -49,40 +49,68 @@ function initNotavel() {
     //start
     genRowsCounter(textEditorEl, rowsCountEl);
     genHighlight(textEditorEl, lang);
-    textEditorEl.innerHTML += '\n'
-    textEditorEl.addEventListener("keydown", (e) => {
-     
-      tst.value = textEditorEl.innerText;
-      genRowsCounter(textEditorEl, rowsCountEl);
-      tst.selectionEnd = window.getSelection().anchorOffset;
+    textEditorEl.innerHTML += "\n";
 
-
-      tst.dispatchEvent(new Event("input", { bubbles: true }));
-      //textEditorEl.innerHTML = textEditorEl.innerText
+    textEditorEl.addEventListener("input", (e) => {
+      console.log(e)
       
-      if (e.key == "Enter") {
-        e.preventDefault();
-        const postPos = window.getSelection().focusOffset +1;
-        e.target.innerHTML = textEditorEl.innerText.slice(0,tst.selectionEnd) + '\n ' +textEditorEl.innerText.slice(tst.selectionEnd,textEditorEl.innerText.lenght);
-          window.getSelection().setPosition(textEditorEl.childNodes[0],postPos)
+      tst.value = textEditorEl.innerText;
+      tst.selectionEnd = window.getSelection().focusOffset + 1;
+      tst.dispatchEvent(new Event("input", { bubbles: true, composed: false }));
+      genRowsCounter(textEditorEl, rowsCountEl);
+      if (e.data == "insertLineBreak") {
         
+        const postPos = window.getSelection().focusOffset + 1;
+        console.log('##'+ textEditorEl.innerText.slice(0, tst.selectionEnd-1),'$$'+textEditorEl.innerText.slice(tst.selectionEnd-1,textEditorEl.innerText.lenght))
+        textEditorEl.innerHTML =
+          textEditorEl.innerText.slice(0, tst.selectionEnd-1) +"\n " +textEditorEl.innerText.slice(tst.selectionEnd-1,textEditorEl.innerText.lenght
+          );
+        window.getSelection().setPosition(textEditorEl.childNodes[0], postPos);
+      }
+      if (e.data == "insertTab") {
         
+        const postPos = window.getSelection().focusOffset + 2;
+        console.log('##'+ textEditorEl.innerText.slice(0, tst.selectionEnd-1),'$$'+textEditorEl.innerText.slice(tst.selectionEnd-1,textEditorEl.innerText.lenght))
+        textEditorEl.innerHTML =
+          textEditorEl.innerText.slice(0, tst.selectionEnd-1) +"  "+textEditorEl.innerText.slice(tst.selectionEnd-1,textEditorEl.innerText.lenght
+          );
+        window.getSelection().setPosition(textEditorEl.childNodes[0], postPos);
       }
     });
+    textEditorEl.addEventListener("keydown", (e) => {
+      //textEditorEl.innerHTML = textEditorEl.innerText
+      if(e.key == "Tab")
+      {
+        e.preventDefault()
+        let evt = new Event('input')
+        evt.data = 'insertTab'
+        textEditorEl.dispatchEvent(evt)
+      }
+      if (e.key == "Enter") {
+        e.preventDefault();
+        let evt = new Event('input')
+        evt.data = 'insertLineBreak'
+        textEditorEl.dispatchEvent(evt)
+      }
+      genRowsCounter(textEditorEl, rowsCountEl);
+    });
     textEditorEl.addEventListener("focusout", (e) => {
-      //genHighlight(textEditorEl, lang);
+      genHighlight(textEditorEl, lang);
+      genRowsCounter(textEditorEl, rowsCountEl);
+    });
+    textEditorEl.addEventListener("focusin", (e) => {
+      textEditorEl.innerHTML = textEditorEl.innerText
       genRowsCounter(textEditorEl, rowsCountEl);
     });
     let style = document.createElement("style");
     style.innerHTML = `
-    pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{background:#222;color:#aaa}.hljs-subst{color:#aaa}.hljs-section{color:#fff}.hljs-comment,.hljs-meta,.hljs-quote{color:#444}.hljs-bullet,.hljs-regexp,.hljs-string,.hljs-symbol{color:#fc3}.hljs-addition,.hljs-number{color:#0c6}.hljs-attribute,.hljs-built_in,.hljs-link,.hljs-literal,.hljs-template-variable,.hljs-type{color:#32aaee}.hljs-keyword,.hljs-name,.hljs-selector-class,.hljs-selector-id,.hljs-selector-tag{color:#64a}.hljs-deletion,.hljs-template-tag,.hljs-title,.hljs-variable{color:#b16}.hljs-doctag,.hljs-section,.hljs-strong{font-weight:700}.hljs-emphasis{font-style:italic}
+    pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{background:#222;color:#aaa}.hljs-subst{color:#aaa}.hljs-section{color:#fff}.hljs-comment,.hljs-meta,.hljs-quote{color:#444}.hljs-bullet,.hljs-regexp,.hljs-string,.hljs-symbol{color:#fc3}.hljs-addition,.hljs-number{color:#0c6}.hljs-attribute,.hljs-built_in,.hljs-link,.hljs-literal,.hljs-template-variable,.hljs-type{color:#32aaee}.hljs-keyword,.hljs-name,.hljs-selector-class,.hljs-selector-id,.hljs-selector-tag{color:#64a}.hljs-deletion,.hljs-template-tag,.hljs-title,.hljs-variable{color:#f1f}.hljs-doctag,.hljs-section,.hljs-strong{font-weight:700}.hljs-emphasis{font-style:italic}
     `;
     document.body.appendChild(style);
 
     tst.appendChild(header);
     header.appendChild(rowsCountEl);
     header.appendChild(textEditorEl);
-   
   });
 }
 
